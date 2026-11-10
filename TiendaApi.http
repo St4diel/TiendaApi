@@ -1,0 +1,34 @@
+@api = http://localhost:5000/api/productos
+
+### A · Listar. Antes del HUECO 1: "categoria": 1 (número). Después: "Perifericos"
+GET {{api}}
+
+### B · Crear válido -> 201 (necesita el HUECO 1 para entender "Perifericos")
+POST {{api}}
+Content-Type: application/json
+
+{ "nombre": "Webcam HD", "precio": 19.99, "stock": 10, "categoria": "Perifericos", "descripcion": null }
+
+### C · 🧨 Datos malos. Lánzala DESPUÉS del HUECO 2 (500) y otra vez después del HUECO 3 (400)
+POST {{api}}
+Content-Type: application/json
+
+{ "nombre": "", "precio": -5, "stock": -3, "categoria": "Monitores", "descripcion": null }
+
+### D · Categoría inventada -> 400 (el enum no la reconoce)
+POST {{api}}
+Content-Type: application/json
+
+{ "nombre": "Silla", "precio": 50, "stock": 1, "categoria": "monitr", "descripcion": null }
+
+### E · Retirar 1 del Monitor (id 3, stock 3) -> 200, queda en 2
+POST {{api}}/3/retirar-stock
+Content-Type: application/json
+
+{ "cantidad": 1 }
+
+### F · Retirar 50 del Monitor. Sin HUECO 4: 200 con stock negativo · Con HUECO 4: 422
+POST {{api}}/3/retirar-stock
+Content-Type: application/json
+
+{ "cantidad": 50 }
